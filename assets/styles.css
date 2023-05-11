@@ -1,0 +1,39 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #181e2c;
+}
+
+canvas {
+  margin: 0px;
+  border: 2px solid red;
+  background-color: white;
+}
+
+#colorPicker {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.colorButton {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #000;
+  margin: 5px;
+  cursor: pointer;
+}
+
+#cooldown-timer {
+  position: fixed;
+  top: 0px;
+  left: 50vw;
+  height:  25px;
+  width: auto;
+  background-color: #6711bd;
+  color: white;
+  font-weight: bold;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 2px;
+}
