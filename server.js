@@ -9,7 +9,7 @@ const repl = require('repl');
 // #                                                                                               #
 
 const server_cfg =        require('./settings/server.json');
-const place_cfg =         require('./settings/place.json');
+let place_cfg =         require('./settings/place.json');
 
 // #                                                                                               #
 // #################################################################################################
@@ -29,6 +29,11 @@ let vip = [];
 // #                                                                                               #
 // #################################################################################################
 // #                                                                                               #
+
+// disable the color stuff if we don't want it.
+if( server_cfg.free_colors ){
+  place_cfg.colors = false;
+}
 
 app.use(express.static(`${__dirname}/assets`));
 
