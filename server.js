@@ -4,28 +4,12 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const repl = require('repl');
 
-const session = require('express-session');
-const sharedsession = require("express-socket.io-session");
-
 // #                                                                                               #
 // #################################################################################################
 // #                                                                                               #
 
 const server_cfg =        require('./settings/server.json');
 const place_cfg =         require('./settings/place.json');
-
-// #                                                                                               #
-// #################################################################################################
-// #                                                                                               #
-
-const sessionMiddleware = session({
-  secret: "123456", //server_cfg.session_secret,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-});
 
 // #                                                                                               #
 // #################################################################################################
@@ -47,13 +31,6 @@ let vip = [];
 // #                                                                                               #
 
 app.use(express.static(`${__dirname}/assets`));
-
-app.use(sessionMiddleware);
-
-io.use(sharedsession(sessionMiddleware, {
-  autoSave: true
-}));
-
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/assets/index.html');
