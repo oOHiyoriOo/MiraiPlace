@@ -1,3 +1,5 @@
+./settings/server.json
+
 # Logs
 logs
 *.log
