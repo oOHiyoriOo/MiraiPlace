@@ -3,6 +3,10 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const repl = require('repl');
+const cookieParser = require('cookie-parser')
+const requests = require('superagent');
+const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken');
 
 // #                                                                                               #
 // #################################################################################################
@@ -36,10 +40,55 @@ if( server_cfg.free_colors ){
 }
 
 app.use(express.static(`${__dirname}/assets`));
+app.use(cookieParser())
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/assets/index.html');
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+
+async function authenticateToken(req, res, next) {
+	let token = req.cookies['token']
+	if (token == null) return res.redirect(307,"https://discord.com/api/oauth2/authorize?client_id=1106468206446657576&redirect_uri=http://hanami.miraidyus.world:25566/auth&response_type=token&scope=identify")
+		
+	jwt.verify(token, server_cfg.jwt_secret, (err, decoded) => {	  
+		if (err) return res.redirect(307,"https://discord.com/api/oauth2/authorize?client_id=1106468206446657576&redirect_uri=http://hanami.miraidyus.world:25566/auth&response_type=token&scope=identify")
+		req.user = decoded
+		next();
+	});
+}
+
+app.get('/', authenticateToken, (req, res) => {
+  res.sendFile(__dirname + '/assets/canvas.html');
 });
+
+
+app.get('/auth', (req, res) => {
+  // #token_type=Bearer&access_token=NAEKsHWhE5Br3GttfrZcwexTWRBvRC&expires_in=604800&scope=identify
+  res.sendFile(__dirname + '/assets/auth.html');
+})
+
+app.get('/check', (req, res) => {
+  res.send({'msg':'Hello World!'})
+})
+
+app.post('/auth', async (req,res) => {
+	let {tokenType, accessToken } = req.body;
+
+	requests.get('https://discord.com/api/users/@me')
+		.set('authorization', `${tokenType} ${accessToken}`)
+		.end((err, dres) => {
+			if (err) { return console.log(err); }
+			data = JSON.parse(dres.text)	
+
+			res.json( {
+        // discord token is 7 days valid in general, we should stay under it, 
+        // the cookie in the client is set to discord expire time to prevent usage of expired token.
+				"cookie":jwt.sign( {"user":data} , server_cfg.jwt_secret ,{ "expiresIn" : server_cfg.jwt_expiry+"s" }),
+				"cname":'token'
+			 })
+		});
+})
+
 
 // #                                                                                               #
 // #################################################################################################
@@ -47,7 +96,20 @@ app.get('/', (req, res) => {
 
 const db = initDatabase(server_cfg);
 
-io.on('connection', (socket) => {
+
+io.use((socket, next) => {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    jwt.verify(socket.handshake.query.token, server_cfg.jwt_secret, (err, decoded) => {
+      if (err) return next(new Error('Authentication error'));
+      socket.decoded = decoded;
+      socket.decoded.user.full_name = `${socket.decoded.user.username}#${socket.decoded.user.discriminator}`
+      next();
+    });
+  } else {
+      next(new Error('Authentication error'));
+  }    
+})
+.on('connection', (socket) => {
   connectionHandler(socket, db, place_cfg, vip);
 
   socket.on('drawPixel', (data) => {
@@ -81,7 +143,10 @@ replServer.context.getkey = () => getkey(__dirname);
 
 replServer.context.shutdown = () => {
   console.log('Exiting the server and REPL...');
+  
   replServer.close(); // Close the REPL
+  console.log("Closed REPL...")
+
   server.close(() => { // Close the server
     console.log('Server and REPL closed.');
     process.exit(0); // Exit the process

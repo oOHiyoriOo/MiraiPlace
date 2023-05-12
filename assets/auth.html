@@ -1,0 +1,54 @@
+<html>
+
+    <head>
+        <title>Pixel Auth</title>
+    </head>
+    <body style="background-color: #0e1320;">
+        <h1>Authentication Loading...</h1>
+        <script>
+            window.onload = async () => {
+                const fragment = new URLSearchParams(window.location.hash.slice(1));
+                const [accessToken, tokenType, expireSec] = [fragment.get('access_token'), fragment.get('token_type'), fragment.get('expires_in')];
+
+                if (!accessToken) {
+                    redirectToHome();
+                } else {
+                    try {
+                        const options = {
+                            method: 'POST',
+                            body: JSON.stringify({ accessToken, tokenType }),
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: "same-origin"
+                        }
+                        const response = await fetch(`${window.location.origin}/auth`, options);
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const { cname, cookie} = await response.json();
+
+                        setCookie(cname, cookie, expireSec);
+ 
+                        window.location.replace(`${window.location.origin}/`);
+                    } catch (err) {
+                        console.error("Error: ", err);
+                        redirectToHome();
+                    }
+                }
+            };
+
+            function redirectToHome() {
+                window.location.replace(window.location.origin);
+            }
+
+            function setCookie(name, value, seconds) {
+                const expires = new Date(Date.now() + seconds * 1000).toUTCString();
+                document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+            }
+        </script>
+    </body>
+</html>

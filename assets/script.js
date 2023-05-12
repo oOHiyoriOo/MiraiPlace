@@ -1,7 +1,7 @@
 const canvas = document.getElementById('placeCanvas');
 const ctx = canvas.getContext('2d');
 const colorPicker = document.getElementById('colorPicker');
-let colors = ['#FFFFFF']; // default color is just white.
+let colors = ['#000000']; // default color is just white.
 let currentColor = colors[0];
 let lastPaintTime = 0;
 let paintCooldown = Infinity;
@@ -45,103 +45,130 @@ function colorPicking(e){
   currentColor = e.target.value;
 }
 
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for(let i=0;i < ca.length;i++) {
+      let c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
+
 // #                                                                                               #
 // #################################################################################################
 // #                                                                                               #
 
 
 
-const socket = io();
+const token = getCookie('token');
+if (token) {
+    startSocket(token)
+} else {
+    alert("Something wen't wrong, try reloading the Page!")
+}
 
-socket.on('settings', (cfg) => {
-
-  // little snippet to reload the page when i restart the server.
-  if( !initDone ){ initDone = true; }
-  else { window.location.reload() }
-
-  // get the cooldown and set the canvas size.
-  paintCooldown = cfg.cooldown;
-  canvas.setAttribute("width", cfg.width)
-  canvas.setAttribute("height", cfg.height)
-
-  // clear the color picker elem to prevent double or triple elements.
-  document.getElementById("colorPicker").innerHTML = "";
-  
-  // enable free colors, if the server allows it! :D
-  if( cfg.colors === false ){
-    document.getElementById("headerBanner").innerHTML += `<input type="color" id="colorSpace" onchange="colorPicking(event)" oninput="colorPicking(event)">`;
-    return;
-  }
-
-  // set the color buttons if we need them.
-  colors = isValidHexArray(cfg.colors) ? cfg.colors : colors;
-  colors.forEach(color => {
-    const button = document.createElement('button');
-    button.style.backgroundColor = color;
-    button.classList.add('colorButton');
-    button.addEventListener('click', () => {
-      currentColor = color;
-    });
-    colorPicker.appendChild(button);
+function startSocket(token){
+  const socket = io({
+    query: { token }
   });
 
-})
-
-
-socket.on('loadCanvas', (pixels) => {
-  pixels.forEach(pixel => {
-    ctx.fillStyle = pixel.color;
-    ctx.fillRect(pixel.x, pixel.y, 10, 10);
+  socket.on('connect_error', (error) => {
+    if (error.message === 'Authentication error') {
+      document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      window.location.reload();
+    }
   });
-});
-
-socket.on('updateCanvas', (data) => {
-  ctx.fillStyle = data.color;
-  ctx.fillRect(data.x, data.y, 10, 10);
-});
-
-socket.on('banned', (bit) => {
-  alert("You are Banned from drawing.")
-});
-
-canvas.addEventListener('mousedown', (event) => {
-  const currentTime = Date.now();
-
-  
-  const rect = canvas.getBoundingClientRect();
-  const x = Math.floor((event.clientX - rect.left) / 10) * 10;
-  const y = Math.floor((event.clientY - rect.top) / 10) * 10;
-
-  const pixelData = ctx.getImageData(x, y, 1, 1).data;
-  const currentPixelColor = `#${prependZeroIfNeeded(pixelData[0].toString(16))}${prependZeroIfNeeded(pixelData[1].toString(16))}${prependZeroIfNeeded(pixelData[2].toString(16))}`;
-  console.log( `${currentPixelColor } <= ${currentColor}` )
 
 
-  // if it's already the color or time is not up, cancel.
-  // btw time is also calculated by the server, no cheating here...
-  if ( (currentTime - lastPaintTime < paintCooldown) ||
-        ( currentPixelColor.toLowerCase() == currentColor.toLowerCase() ) ) {
-    return;
-  }
-  lastPaintTime = currentTime;
+  socket.on('settings', (cfg) => {
 
+    // little snippet to reload the page when i restart the server.
+    if( !initDone ){ initDone = true; }
+    else { window.location.reload() }
 
-  socket.emit('drawPixel', { x, y, color: currentColor });
-  setTimer();
-});
+    // get the cooldown and set the canvas size.
+    paintCooldown = cfg.cooldown;
+    canvas.setAttribute("width", cfg.width)
+    canvas.setAttribute("height", cfg.height)
 
-
-// #                                                                                               #
-// #################################################################################################
-// #                                                                                               #
-// some utils.
-
-document.addEventListener('keydown', function(event) {
-  if (event.ctrlKey && event.shiftKey && event.key === 'F') {
-    event.preventDefault();
-    let userInput = prompt('Key:');
+    // clear the color picker elem to prevent double or triple elements.
+    document.getElementById("colorPicker").innerHTML = "";
     
-    console.log("Send: "+ JSON.stringify( { "key": userInput } ) )
-    socket.emit('redeemKey', { "key": userInput });
-  }
-});
+    // enable free colors, if the server allows it! :D
+    if( cfg.colors === false ){
+      document.getElementById("headerBanner").innerHTML += `<input type="color" id="colorSpace" onchange="colorPicking(event)" oninput="colorPicking(event)" value="#6711bd">`;
+      return;
+    }
+
+    // set the color buttons if we need them.
+    colors = isValidHexArray(cfg.colors) ? cfg.colors : colors;
+    colors.forEach(color => {
+      const button = document.createElement('button');
+      button.style.backgroundColor = color;
+      button.classList.add('colorButton');
+      button.addEventListener('click', () => {
+        currentColor = color;
+      });
+      colorPicker.appendChild(button);
+    });
+
+  })
+
+
+  socket.on('loadCanvas', (pixels) => {
+    pixels.forEach(pixel => {
+      ctx.fillStyle = pixel.color;
+      ctx.fillRect(pixel.x, pixel.y, 10, 10);
+    });
+  });
+
+  socket.on('updateCanvas', (data) => {
+    ctx.fillStyle = data.color;
+    ctx.fillRect(data.x, data.y, 10, 10);
+  });
+
+  socket.on('banned', (bit) => {
+    alert("You are Banned from drawing.")
+  });
+
+  canvas.addEventListener('mousedown', (event) => {
+    const currentTime = Date.now();
+
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left) / 10) * 10;
+    const y = Math.floor((event.clientY - rect.top) / 10) * 10;
+
+    const pixelData = ctx.getImageData(x, y, 1, 1).data;
+    const currentPixelColor = `#${prependZeroIfNeeded(pixelData[0].toString(16))}${prependZeroIfNeeded(pixelData[1].toString(16))}${prependZeroIfNeeded(pixelData[2].toString(16))}`;
+
+
+    // if it's already the color or time is not up, cancel.
+    // btw time is also calculated by the server, no cheating here...
+    if ( (currentTime - lastPaintTime < paintCooldown) ||
+          ( currentPixelColor.toLowerCase() == currentColor.toLowerCase() ) ) {
+      return;
+    }
+    lastPaintTime = currentTime;
+
+
+    socket.emit('drawPixel', { x, y, color: currentColor });
+    setTimer();
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.shiftKey && event.key === 'F') {
+      event.preventDefault();
+      let userInput = prompt('Key:');
+    
+      socket.emit('redeemKey', { "key": userInput });
+    }
+  });
+}
+
+// #                                                                                               #
+// #################################################################################################
+// #                                                                                               #

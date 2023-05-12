@@ -2,6 +2,7 @@
     "host": "127.0.0.1",
     "port": 8080,
     "database": ":memory:",
-    "jwt_secret":"JWT Secret",
-    "free_colors":true
+    "jwt_secret":"SuperSecretToken4242",
+    "free_colors":true,
+    "jwt_expiry": 86400
 }
