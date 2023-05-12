@@ -10,7 +10,7 @@ __ __
 | Sessions | ➖ | Cookies werden genutzt |
 | VIP / Mod | ✔️ |  CTRL + SHIFT + F to open Key Menu |
 | Multiple Colors | ✔️ |  Free Coloring and Set coloring. |
-| Toggle Login | ❌ | Currently there's no Option to turn of Discord Auth |
+| Toggle Login | ❌ | Currently there's no Option to turn off Discord Auth |
 | Discord Config | ❌ |  Auth url has to be set in server.js |
 
 
