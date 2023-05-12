@@ -25,15 +25,36 @@ canvas {
 }
 
 #cooldown-timer {
-  position: fixed;
-  top: 0px;
-  left: 50vw;
-  height:  25px;
+  height:  30px;
   width: auto;
-  background-color: #6711bd;
   color: white;
   font-weight: bold;
+  padding: 2px;
+  display: block;
+}
+
+#headerBanner {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-  padding: 2px;
+  align-items: center;
+  position: fixed;
+  top: 0px;
+  left: calc( (100vw - (15vw / 2)) / 2);
+  height: 70px;
+  width: 15vw;
+  background-color: #0e1320;
+}
+
+#colorSpace {
+  padding: 0px;
+  border-radius: 5px;
+  border: 1px solid #6711bd;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
 }

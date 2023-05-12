@@ -41,6 +41,10 @@ function prependZeroIfNeeded(num) {
   return num < 10 ? '0' + num : num;
 }
 
+function colorPicking(e){
+  currentColor = e.target.value;
+}
+
 // #                                                                                               #
 // #################################################################################################
 // #                                                                                               #
@@ -55,12 +59,22 @@ socket.on('settings', (cfg) => {
   if( !initDone ){ initDone = true; }
   else { window.location.reload() }
 
-  colors = isValidHexArray(cfg.colors) ? cfg.colors : colors;
+  // get the cooldown and set the canvas size.
   paintCooldown = cfg.cooldown;
   canvas.setAttribute("width", cfg.width)
   canvas.setAttribute("height", cfg.height)
 
-  document.getElementById("colorPicker").innerHTML = ""; // clear the buttons.
+  // clear the color picker elem to prevent double or triple elements.
+  document.getElementById("colorPicker").innerHTML = "";
+  
+  // enable free colors, if the server allows it! :D
+  if( cfg.colors === false ){
+    document.getElementById("headerBanner").innerHTML += `<input type="color" id="colorSpace" onchange="colorPicking(event)" oninput="colorPicking(event)">`;
+    return;
+  }
+
+  // set the color buttons if we need them.
+  colors = isValidHexArray(cfg.colors) ? cfg.colors : colors;
   colors.forEach(color => {
     const button = document.createElement('button');
     button.style.backgroundColor = color;
@@ -70,6 +84,7 @@ socket.on('settings', (cfg) => {
     });
     colorPicker.appendChild(button);
   });
+
 })
 
 
