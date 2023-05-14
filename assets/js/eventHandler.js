@@ -51,38 +51,3 @@ canvas.addEventListener('wheel', (e) => {
 document.getElementById('playground').addEventListener('wheel', (e) => {
     zoom(e);
 });
-
-
-let previousPixel = { x: -1, y: -1, c: '#ffffff' };
-
-canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const scale = rect.width / canvas.offsetWidth;
-    const x = Math.floor((event.clientX - rect.left) / (10 * scale)) * 10;
-    const y = Math.floor((event.clientY - rect.top) / (10 * scale)) * 10;
-
-    if (previousPixel.x === x && previousPixel.y === y) { return; }
-
-    // Clear the temporary border
-    if (previousPixel.x >= 0 && previousPixel.y >= 0 && (previousPixel.x !== x || previousPixel.y !== y)) {
-        ctx.fillStyle = previousPixel.c;
-        ctx.clearRect(previousPixel.x - 1, previousPixel.y - 1, 12, 12);
-        ctx.fillRect(previousPixel.x, previousPixel.y, 10, 10);
-        redrawDrawnPixels();
-    }
-
-    const pixelData = ctx.getImageData(x, y, 10, 10).data;
-    const currentPixelColor = `#${prependZeroIfNeeded(pixelData[0].toString(16))}${prependZeroIfNeeded(pixelData[1].toString(16))}${prependZeroIfNeeded(pixelData[2].toString(16))}${prependZeroIfNeeded(pixelData[3].toString(16))}`;
-
-    // Draw border around the current pixel
-    ctx.strokeStyle = '#ffffffff';
-    ctx.lineWidth = 0.1;
-    ctx.fillStyle = currentPixelColor;
-    ctx.strokeRect(x, y, 10, 10);
-
-    // Store the current pixel color 
-    // Update previous pixel position
-    previousPixel.c = currentPixelColor;
-    previousPixel.x = x;
-    previousPixel.y = y;
-});

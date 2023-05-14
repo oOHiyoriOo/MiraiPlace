@@ -194,12 +194,12 @@ function startSocket(token) {
     socket.on('updateCanvas', (data) => {
         ctx.fillStyle = data.color;
         ctx.fillRect(data.x, data.y, 10, 10);
-        
+
         // update the chance to redraw the map.
         let selectedEntry = ServerMap.find(entry => entry.x === data.x && entry.y === data.y);
 
         if (selectedEntry) { selectedEntry.color = data.color; }
-        else { ServerMap.push({x: data.x, y: data.y, color: data.color}) }
+        else { ServerMap.push({ x: data.x, y: data.y, color: data.color }) }
 
     });
 
@@ -221,7 +221,7 @@ function startSocket(token) {
 
         // if it's already the color or time is not up, cancel.
         // btw time is also calculated by the server, no cheating here...
-        if ( currentTime - lastPaintTime < paintCooldown ||
+        if (currentTime - lastPaintTime < paintCooldown ||
             (CPCA !== 17 && currentPixelColor.toLowerCase() === currentColor.toLowerCase())
         ) {
             return;
@@ -242,12 +242,4 @@ function startSocket(token) {
         }
     });
 
-}
-
-function redrawDrawnPixels() {
-    if(!ServerMap){ return; }
-    ServerMap.forEach(pixel => {
-        ctx.fillStyle = pixel.color;
-        ctx.fillRect(pixel.x, pixel.y, 10, 10);
-    });
 }
