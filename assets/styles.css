@@ -66,8 +66,12 @@ canvas {
   position: fixed; /* positions the banner at a specified position relative to the viewport */
   top: 50%; /* positions the banner at the center of the page */
   left: 0; /* positions the banner at the left of the page */
-  height: 33vh;
+  min-height: 33vh;
+  max-height: fit-content;
+
   width: auto; /* sets the banner width to 15% of the viewport width */
+  max-width: 100px;
+
   background-color: #0e1320;
   transform: translateY(-50%); /* this will move the banner up by half of its own height, effectively centering it vertically */
   z-index: 2; /* sets the stack order (2 is higher than 1, so it's above #playground) */
@@ -96,6 +100,7 @@ input[type="color"]::-webkit-color-swatch {
 
 
 .btn {
+  margin: 0 auto;
   display: block;
   background-color: #6711bd;
   border: none;

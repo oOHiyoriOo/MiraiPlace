@@ -3,7 +3,7 @@
     "port": 8080,
     "database": "0.0.1.sqlite3",
     "jwt_secret":"SuperSecretToken4242",
-    "free_colors":true,
+    "free_colors": true,
     "jwt_expiry": 86400,
     "discoprd_auth_url": "https://discord.com/api/oauth2/authorize?client_id=1106468206446657576&redirect_uri=http://127.0.0.1:8080/auth&response_type=token&scope=identify"
 }

@@ -149,6 +149,7 @@ function startSocket(token) {
         // little snippet to reload the page when I restart the server.
         if (!initDone) {
             initDone = true;
+            gameCFG = cfg;
         } else {
             window.location.reload();
         }
@@ -164,8 +165,9 @@ function startSocket(token) {
 
         // enable free colors if the server allows it! :D
         if (cfg.colors === false) {
-            document.getElementById("headerBanner").innerHTML += `<input type="color" id="colorSpace" onchange="colorPicking(event)" oninput="colorPicking(event)" value="#6711bd">`;
+            document.getElementById("headerBanner").innerHTML += `<hr><br> <input type="color" id="colorSpace" onchange="colorPicking(event)" oninput="colorPicking(event);" value="#FFFFFF">`;
             currentColor = document.getElementById('colorSpace').value;
+            setColorPalette();
             return;
         }
 
@@ -218,6 +220,12 @@ function startSocket(token) {
             return;
         }
 
+
+        if( !colorPalettes.list.includes(currentColor) ){
+            setColorPalette();
+        }
+
+
         lastPaintTime = currentTime;
 
         socket.emit('drawPixel', { x, y, color: currentColor });
@@ -232,5 +240,22 @@ function startSocket(token) {
             socket.emit('redeemKey', { "key": userInput });
         }
     });
+}
 
+function setColorPalette(){
+    if( isValidHexArray(gameCFG.colors) ){ return; }
+    colorPalettes.append( currentColor )
+    
+    document.getElementById("colorPicker").innerHTML = "";
+
+    colorPalettes.list.forEach(color => {
+        const button = document.createElement('button');
+        button.style.backgroundColor = color;
+        button.classList.add('colorButton');
+        button.addEventListener('click', () => {
+            document.getElementById('colorSpace').value = color;
+            currentColor = color;
+        });
+        document.getElementById("colorPicker").appendChild(button);
+    });
 }

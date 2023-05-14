@@ -12,6 +12,13 @@ let scaleStep = 0.1;
 let scale = 1;
 
 let socket; // make the socket accessable globally.
+let colorPalettes = new FixedSizeList(6);
+
+let gameCFG
+
+["#FFFFFF","#FFFFFF","#FFFFFF","#FFFFFF","#FFFFFF","#FFFFFF"].forEach(color => {
+    colorPalettes.append(color);
+});
 
 // #                                                                                               #
 // #################################################################################################
