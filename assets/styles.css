@@ -1,60 +1,88 @@
+/* Global styling */
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #181e2c;
+  font-family: Arial, sans-serif; /* sets the global font */
+  text-align: center; /* centers text globally */
+  background-color: #181e2c; /* sets the global background color */
 }
 
+/* Styling for the playground area */
+#playground {
+  max-width: 90vw; /* sets the maximum width to 90% of the viewport width */
+  max-height: 90vh; /* sets the maximum height to 90% of the viewport height */
+  margin: 0 auto; /* centers the element horizontally */
+  overflow: auto; /* enables scrolling if content overflows */
+  border: 1px solid #0e1320; /* sets the border color and size */
+
+  position: relative; /* positions the element relative to its normal position */
+  z-index: 1; /* sets the stack order (1 is lower than 2, so it's beneath #headerBanner) */
+}
+
+/* Styling for the canvas */
 canvas {
-  margin: 0px;
-  border: 2px solid red;
-  background-color: white;
+  margin: 0px; /* removes margin */
+  border: none; /* removes border */
+  
+  position: relative; /* positions the canvas relative to its normal position */
+  
+  cursor: crosshair;
+  border: 1px solid #6711bd;
 }
 
+/* Styling for the color picker area */
 #colorPicker {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: flex; /* uses flexbox for layout */
+  justify-content: center; /* centers flex items along the horizontal line */
+  flex-wrap: wrap; /* allows flex items to wrap onto next line */
 }
 
+/* Styling for the color button */
 .colorButton {
   width: 25px;
   height: 25px;
   border: 1px solid #000;
   margin: 5px;
-  cursor: pointer;
+  cursor: pointer; /* changes the cursor to a hand when hovering over a color button */
 }
 
+/* Styling for the cooldown timer */
 #cooldown-timer {
-  height:  30px;
+  height: 30px;
   width: auto;
   color: white;
-  font-weight: bold;
+  font-weight: bold; /* makes the font bold */
   padding: 2px;
-  display: block;
+  display: block; /* allows it to start on a new line and take up the full width */
 }
 
+/* Styling for the header banner */
 #headerBanner {
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  align-items: center;
-  position: fixed;
-  top: 0px;
-  left: calc( (100vw - (15vw / 2)) / 2);
-  height: 70px;
-  width: 15vw;
+  position: fixed; /* positions the banner at a specified position relative to the viewport */
+  top: 50%; /* positions the banner at the center of the page */
+  left: 0; /* positions the banner at the left of the page */
+  height: 33vh;
+  width: auto; /* sets the banner width to 15% of the viewport width */
   background-color: #0e1320;
+  transform: translateY(-50%); /* this will move the banner up by half of its own height, effectively centering it vertically */
+  z-index: 2; /* sets the stack order (2 is higher than 1, so it's above #playground) */
+
+  padding: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
+
+/* Styling for the color space */
 #colorSpace {
   padding: 0px;
-  border-radius: 5px;
-  border: 1px solid #6711bd;
+  border-radius: 5px; /* makes the border rounded */
+  border: 1px solid #6711bd; /* sets the border color and size */
 }
 
+/* Styling for the color picker input */
 input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0px;
+  padding: 0px; /* removes padding */
 }
 
 input[type="color"]::-webkit-color-swatch {
-  border: none;
+  border: none; /* removes border */
 }
