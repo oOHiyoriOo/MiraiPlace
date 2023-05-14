@@ -1,7 +1,7 @@
 {
     "host": "127.0.0.1",
     "port": 8080,
-    "database": ":memory:",
+    "database": "0.0.1.sqlite3",
     "jwt_secret":"SuperSecretToken4242",
     "free_colors":true,
     "jwt_expiry": 86400,

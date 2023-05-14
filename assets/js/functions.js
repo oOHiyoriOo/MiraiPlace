@@ -39,12 +39,13 @@ function dragElement(elmnt) {
         pos4 = e.clientY;
 
         // Compute the new position
-        var newTop = elmnt.offsetTop - pos2;
         var newLeft = elmnt.offsetLeft - pos1;
+        var newTop = elmnt.offsetTop - pos2;
 
         // Apply the new position
         elmnt.style.top = newTop + "px";
         elmnt.style.left = newLeft + "px";
+
     }
 
     function closeDragElement() {
@@ -222,6 +223,7 @@ function startSocket(token) {
             currentTime - lastPaintTime < paintCooldown ||
             (currentPixelColor.toLowerCase() !== "#000000" && currentPixelColor.toLowerCase() === currentColor.toLowerCase())
         ) {
+            console.log( `Rejected Same Color: ${currentPixelColor.toLowerCase()} <= ${currentColor.toLowerCase()}` )
             return;
         }
 

@@ -1,4 +1,4 @@
-# Zero's Place^
+# Zero's Place
 ## MiraiPlace
 __ __
 
@@ -12,6 +12,7 @@ __ __
 | Multiple Colors | ✔️ |  Free Coloring and Set coloring. |
 | Discord Config | ✔️ |  moved into server.json |
 | Toggle Login | ❌ | Currently there's no Option to turn off Discord Auth |
+| Scroll Lag | ❌ | Sadly the performance is terrible while scrolling a full canvas currently  |
 
 
 
@@ -22,9 +23,6 @@ __ __
 2. Change in `./settings`:
     - `place.json`
     - `server.json`
-
-> You can get such an URL here: [Discord Dev Portal](https://discord.com/developers/applications)
-
 
 3. `npm i` in the main dir.
 4. `node server.js`
@@ -77,6 +75,8 @@ __ __
 
 }
 ```
+> You can get the AUTH URL here: [Discord Dev Portal](https://discord.com/developers/applications)
+
 
 __ __
 ### Commands:
