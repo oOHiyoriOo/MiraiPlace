@@ -77,7 +77,6 @@ __ __
 ```
 > You can get the AUTH URL here: [Discord Dev Portal](https://discord.com/developers/applications)
 
-
 __ __
 ### Commands:
 `ban('DISCORDID')` ban a user by his Discord ID (can be found in the Terminal after the Name)
