@@ -12,7 +12,7 @@ __ __
 | Multiple Colors | ✔️ |  Free Coloring and Set coloring. |
 | Discord Config | ✔️ |  moved into server.json |
 | Toggle Login | ❌ | Currently there's no Option to turn off Discord Auth |
-| Scroll Lag | ❌ | Sadly the performance is terrible while scrolling a full canvas currently  |
+| Scroll Lag |❓| in recent tests, it's gone, we'll see if it is fixed. |
 
 
 

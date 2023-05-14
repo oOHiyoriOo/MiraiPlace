@@ -134,7 +134,7 @@ function getCookie(name) {
 }
 
 function startSocket(token) {
-    const socket = io({
+    socket = io({
         query: { token }
     });
 
@@ -244,9 +244,7 @@ function startSocket(token) {
 
 }
 
-
 function redrawDrawnPixels() {
-    socket.emit('reloadCanvas', null);
     if(!ServerMap){ return; }
     ServerMap.forEach(pixel => {
         ctx.fillStyle = pixel.color;

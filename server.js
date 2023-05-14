@@ -120,9 +120,9 @@ io.use((socket, next) => {
     redeemKeyHandler(socket, place_cfg, vip, key, __dirname);
   });
 
-  socket.on('reloadCanvas', () => {
-    loadCanvasHandler(socket, db)
-  })
+  // socket.on('reloadCanvas', () => {
+  //   loadCanvasHandler(socket, db)
+  // })
 });
 
 server.listen(server_cfg.port, server_cfg.host, () => {
