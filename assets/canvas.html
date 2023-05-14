@@ -10,7 +10,12 @@
 
   <div id="headerBanner">
     <span id="cooldown-timer">00:00</span>
+    <input id="copyCanvasBtn" type="button" value="Copy" class="btn" onclick="copyCanvasImageToClipboard();" />
+    
+    <div id="colorPalete">
 
+    </div>
+  
   </div>
   
   <div id="playground">
@@ -21,6 +26,8 @@
     <!-- We will dynamically add color buttons here using JavaScript -->
   </div>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/functions.js"></script>
   <script src="script.js"></script>
+  <script src="/js/eventHandler.js"></script>
 </body>
 </html>

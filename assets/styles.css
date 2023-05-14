@@ -1,21 +1,28 @@
 /* Global styling */
-body {
+body, html {
   font-family: Arial, sans-serif; /* sets the global font */
   text-align: center; /* centers text globally */
   background-color: #181e2c; /* sets the global background color */
+  height: 100%; /* sets the height to 100% */
+  width: 100%; /* sets the width to 100% */
+  margin: 0; /* removes margin */
+  padding: 0; /* removes padding */
+  overflow: hidden; /* hides overflow */
+  box-sizing: border-box; /* includes padding and border in element's total width and height */
 }
 
 /* Styling for the playground area */
 #playground {
-  max-width: 90vw; /* sets the maximum width to 90% of the viewport width */
-  max-height: 90vh; /* sets the maximum height to 90% of the viewport height */
-  margin: 0 auto; /* centers the element horizontally */
-  overflow: auto; /* enables scrolling if content overflows */
+  width: 100vw; /* sets the width to 100% of the viewport width */
+  height: 100vh; /* sets the height to 100% of the viewport height */
+  overflow: hidden; /* enables scrolling if content overflows */
   border: 1px solid #0e1320; /* sets the border color and size */
+  box-sizing: border-box; /* includes padding and border in element's total width and height */
 
   position: relative; /* positions the element relative to its normal position */
   z-index: 1; /* sets the stack order (1 is lower than 2, so it's beneath #headerBanner) */
 }
+
 
 /* Styling for the canvas */
 canvas {
@@ -85,4 +92,16 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 
 input[type="color"]::-webkit-color-swatch {
   border: none; /* removes border */
+}
+
+
+.btn {
+  display: block;
+  background-color: #6711bd;
+  border: none;
+  border-radius: 5px;
+  width: 50px;
+  height: 27px;
+  margin-bottom: 2px;
+  color: white;
 }
