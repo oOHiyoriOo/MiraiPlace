@@ -197,6 +197,7 @@ function startSocket(token) {
         
         // update the chance to redraw the map.
         let selectedEntry = ServerMap.find(entry => entry.x === data.x && entry.y === data.y);
+
         if (selectedEntry) { selectedEntry.color = data.color; }
         else { ServerMap.push({x: data.x, y: data.y, color: data.color}) }
 
@@ -216,14 +217,13 @@ function startSocket(token) {
 
         const pixelData = ctx.getImageData(x, y, 1, 1).data;
         const currentPixelColor = `#${prependZeroIfNeeded(pixelData[0].toString(16))}${prependZeroIfNeeded(pixelData[1].toString(16))}${prependZeroIfNeeded(pixelData[2].toString(16))}`;
+        const CPCA = prependZeroIfNeeded(pixelData[3].toString(16))
 
         // if it's already the color or time is not up, cancel.
         // btw time is also calculated by the server, no cheating here...
-        if (
-            currentTime - lastPaintTime < paintCooldown ||
-            (currentPixelColor.toLowerCase() !== "#000000" && currentPixelColor.toLowerCase() === currentColor.toLowerCase())
+        if ( currentTime - lastPaintTime < paintCooldown ||
+            (CPCA !== 17 && currentPixelColor.toLowerCase() === currentColor.toLowerCase())
         ) {
-            console.log( `Rejected Same Color: ${currentPixelColor.toLowerCase()} <= ${currentColor.toLowerCase()}` )
             return;
         }
 
@@ -241,10 +241,12 @@ function startSocket(token) {
             socket.emit('redeemKey', { "key": userInput });
         }
     });
+
 }
 
 
 function redrawDrawnPixels() {
+    socket.emit('reloadCanvas', null);
     if(!ServerMap){ return; }
     ServerMap.forEach(pixel => {
         ctx.fillStyle = pixel.color;

@@ -86,5 +86,3 @@ canvas.addEventListener('mousemove', (event) => {
     previousPixel.x = x;
     previousPixel.y = y;
 });
-
-
