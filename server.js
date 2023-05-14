@@ -12,16 +12,16 @@ const jwt = require('jsonwebtoken');
 // #################################################################################################
 // #                                                                                               #
 
-const server_cfg =        require('./settings/server.json');
-let place_cfg =         require('./settings/place.json');
+const server_cfg          = require('./settings/server.json');
+let place_cfg             = require('./settings/place.json');
 
 // #                                                                                               #
 // #################################################################################################
 // #                                                                                               #
-const initDatabase =      require('./lib/handlers/initDatabase');
-const connectionHandler = require('./lib/handlers/events/connectionHandler');
-const drawPixelHandler =  require('./lib/handlers/events/drawPixelHandler');
-const redeemKeyHandler =  require('./lib/handlers/events/redeemKeyHandler');
+const initDatabase        = require('./lib/handlers/initDatabase');
+const connectionHandler   = require('./lib/handlers/events/connectionHandler');
+const drawPixelHandler    = require('./lib/handlers/events/drawPixelHandler');
+const redeemKeyHandler    = require('./lib/handlers/events/redeemKeyHandler');
 
 // #                                                                                               #
 // #################################################################################################
@@ -48,10 +48,10 @@ app.use(bodyParser.json())
 
 async function authenticateToken(req, res, next) {
 	let token = req.cookies['token']
-	if (token == null) return res.redirect(307,"https://discord.com/api/oauth2/authorize?client_id=1106468206446657576&redirect_uri=http://hanami.miraidyus.world:25566/auth&response_type=token&scope=identify")
+	if (token == null) return res.redirect(307,server_cfg.discoprd_auth_url)
 		
 	jwt.verify(token, server_cfg.jwt_secret, (err, decoded) => {	  
-		if (err) return res.redirect(307,"https://discord.com/api/oauth2/authorize?client_id=1106468206446657576&redirect_uri=http://hanami.miraidyus.world:25566/auth&response_type=token&scope=identify")
+		if (err) return res.redirect(307,server_cfg.discoprd_auth_url)
 		req.user = decoded
 		next();
 	});
