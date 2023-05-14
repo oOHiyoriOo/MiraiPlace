@@ -10,8 +10,8 @@ __ __
 | Sessions | ➖ | Cookies werden genutzt |
 | VIP / Mod | ✔️ |  CTRL + SHIFT + F to open Key Menu |
 | Multiple Colors | ✔️ |  Free Coloring and Set coloring. |
+| Discord Config | ✔️ |  moved into server.json |
 | Toggle Login | ❌ | Currently there's no Option to turn off Discord Auth |
-| Discord Config | ❌ |  Auth url has to be set in server.js |
 
 
 
@@ -23,9 +23,7 @@ __ __
     - `place.json`
     - `server.json`
 
-2.1 (Currently)
-    Setup Discord Auth URL in server.js
-    You can get such an URL here: [Discord Dev Portal](https://discord.com/developers/applications)
+> You can get such an URL here: [Discord Dev Portal](https://discord.com/developers/applications)
 
 
 3. `npm i` in the main dir.
@@ -74,7 +72,9 @@ __ __
     "database": ":memory:", // the database to use, this can be :memory: to be RAM only or a filename like 'canvas.sql'
     "jwt_secret":"SuperSecretToken4242", // the secret used to encrypt the JWT token
     "free_colors":true, // this enables or disabled the color picker.
-    "jwt_expiry": 86400 // how long should the JWT token eist? in generel discord tokens are valid for 7 days, you should keep this lower.
+    "jwt_expiry": 86400, // how long should the JWT token eist? in generel discord tokens are valid for 7 days, you should keep this lower.
+    "discoprd_auth_url": "https://discord.com/api/oauth2/authorize?client_id=xxxxx&redirect_uri=http://xxxx/auth&response_type=token&scope=identify" // discord auth url.
+
 }
 ```
 
