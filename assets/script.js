@@ -11,7 +11,6 @@ let initDone = false; // used to determine if the page should be reloaded.
 let scaleStep = 0.1;
 let scale = 1;
 
-let ServerMap;
 let socket; // make the socket accessable globally.
 
 // #                                                                                               #

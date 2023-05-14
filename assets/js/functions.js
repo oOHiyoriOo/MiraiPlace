@@ -183,8 +183,6 @@ function startSocket(token) {
     });
 
     socket.on('loadCanvas', (pixels) => {
-        ServerMap = pixels;
-
         pixels.forEach(pixel => {
             ctx.fillStyle = pixel.color;
             ctx.fillRect(pixel.x, pixel.y, 10, 10);
@@ -194,13 +192,6 @@ function startSocket(token) {
     socket.on('updateCanvas', (data) => {
         ctx.fillStyle = data.color;
         ctx.fillRect(data.x, data.y, 10, 10);
-
-        // update the chance to redraw the map.
-        let selectedEntry = ServerMap.find(entry => entry.x === data.x && entry.y === data.y);
-
-        if (selectedEntry) { selectedEntry.color = data.color; }
-        else { ServerMap.push({ x: data.x, y: data.y, color: data.color }) }
-
     });
 
     socket.on('banned', (bit) => {
