@@ -58,6 +58,12 @@ async function authenticateToken(req, res, next) {
 }
 
 app.get('/', authenticateToken, (req, res) => {
+  // redirect to right domain if needed.
+  if( server_cfg.redirect_domain !== false && req.headers['host'] != server_cfg.redirect_domain){
+    res.redirect(server_cfg.redirect_domain);
+    return;
+  }
+
   res.sendFile(__dirname + '/assets/canvas.html');
 });
 
@@ -119,10 +125,6 @@ io.use((socket, next) => {
   socket.on('redeemKey', (key) => {
     redeemKeyHandler(socket, place_cfg, vip, key, __dirname);
   });
-
-  // socket.on('reloadCanvas', () => {
-  //   loadCanvasHandler(socket, db)
-  // })
 });
 
 server.listen(server_cfg.port, server_cfg.host, () => {
@@ -138,7 +140,6 @@ const replServer = repl.start({ prompt: '' });
 const ban = require('./lib/commands/ban');
 const unban = require('./lib/commands/unban');
 const getkey = require('./lib/commands/getkey');
-const loadCanvasHandler = require('./lib/handlers/events/loadCanvasHandler');
 
 replServer.context.ban = (clientIp) => ban(clientIp, __dirname);
 replServer.context.unban = (clientIp) => unban(clientIp, __dirname);

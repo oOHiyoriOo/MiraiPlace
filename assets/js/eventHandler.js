@@ -18,6 +18,7 @@ document.addEventListener('keydown', function (event) {
     canvas.style.top = "0px";
     canvas.style.left = "0px";
     canvas.style.scale = "1";
+    scale = 1;
     document.getElementById('playground').scrollTo(0, 0);
 });
 
@@ -40,7 +41,7 @@ document.addEventListener('keydown', (e) => {
         return;
     }
     e.preventDefault();
-    helpControlls();
+    helpControls();
 });
 
 // Zoom functionality when scrolling on canvas and playground
