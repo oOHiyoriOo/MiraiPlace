@@ -94,6 +94,9 @@ __ __
 __ __
 ### Commands:
 `ban('DISCORDID')` ban a user by his Discord ID (can be found in the Terminal after the Name)
+
 `unban('DISCORDID')` unban user by it's ID
+
 `getkey()` generates a VIP / Mod Key, can be used by pressing CTRL + SHIFT + F on the canvas.
+
 `shutdown()` can be used to stop the server (for some reason doesn't work every time, `^C` is a better Solution )
