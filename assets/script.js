@@ -44,6 +44,14 @@ socket.on('cursorsUpdate', (data) => {
 });
 
 function createCursorElement(cursorId, position) {
+  
+  // ignore and if needed remove own cursor.
+  if(cursorId == gameCFG.id){ 
+    let cursor = document.getElementById(cursorId);
+    if(cursor) { cursor.remove() }
+    return; 
+  }
+
   const cursorElement = document.createElement('span');
   cursorElement.classList.add('cursor');
   cursorElement.id = cursorId;
