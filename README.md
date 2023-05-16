@@ -7,7 +7,7 @@ __ __
 | Feature | Status | Note |
 | ------ | ------ |  ------ |
 | Login | ✔️ | Implemented with Discord Login |
-| Sessions | ➖ | Cookies werden genutzt |
+| Sessions | ➖ | Solved using Cookies |
 | VIP / Mod | ✔️ |  CTRL + SHIFT + F to open Key Menu |
 | Multiple Colors | ✔️ |  Free Coloring and Set coloring. |
 | Discord Config | ✔️ |  moved into server.json |
@@ -30,8 +30,22 @@ __ __
 
 __ __
 ### Nginx?
-> Currently i have no pre-made ngin config as I am stil working on more Moderation tools.´
+```nginx
+server {
+    server_name place.example.com;  # Replace with your domain name
 
+    location / {
+        proxy_pass http://SERVERIP:PORT;  # Replace with the actual address of your Node.js server
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+    }
+}
+```
+
+> SSL needs to be enable for the Clipboard function to work!
+> [Certbot](https://certbot.eff.org/) can be used to enable SSL
 
 __ __
 ### Config:
@@ -80,6 +94,9 @@ __ __
 __ __
 ### Commands:
 `ban('DISCORDID')` ban a user by his Discord ID (can be found in the Terminal after the Name)
+
 `unban('DISCORDID')` unban user by it's ID
+
 `getkey()` generates a VIP / Mod Key, can be used by pressing CTRL + SHIFT + F on the canvas.
+
 `shutdown()` can be used to stop the server (for some reason doesn't work every time, `^C` is a better Solution )
