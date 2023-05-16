@@ -35,6 +35,15 @@ canvas {
   border: 1px solid #6711bd;
 }
 
+.cursor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transition: left 0.5s, top 0.5s;
+  z-index: 2;
+  pointer-events: none;
+}
+
 /* Styling for the color picker area */
 #colorPicker {
   display: flex; /* uses flexbox for layout */
@@ -74,7 +83,7 @@ canvas {
 
   background-color: #0e1320;
   transform: translateY(-50%); /* this will move the banner up by half of its own height, effectively centering it vertically */
-  z-index: 2; /* sets the stack order (2 is higher than 1, so it's above #playground) */
+  z-index: 3; /* sets the stack order (2 is higher than 1, so it's above #playground) */
 
   padding: 10px;
   border-top-right-radius: 5px;

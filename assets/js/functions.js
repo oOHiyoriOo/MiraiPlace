@@ -45,7 +45,6 @@ function dragElement(elmnt) {
         // Apply the new position
         elmnt.style.top = newTop + "px";
         elmnt.style.left = newLeft + "px";
-
     }
 
     function closeDragElement() {
@@ -158,6 +157,7 @@ function startSocket(token) {
         paintCooldown = cfg.cooldown;
         canvas.setAttribute("width", cfg.width);
         canvas.setAttribute("height", cfg.height);
+
         dragElement(canvas);
 
         // clear the color picker element to prevent double or triple elements.
@@ -240,7 +240,38 @@ function startSocket(token) {
             socket.emit('redeemKey', { "key": userInput });
         }
     });
+
+
+
+    canvas.addEventListener('mousemove', (event) => {
+        cursorPosition = getCursorPosition(event);
+        if (!isThrottled) {
+            isThrottled = true;
+
+            socket.emit('setCursorPosition', cursorPosition)
+      
+            setTimeout(() => {
+                isThrottled = false;
+            }, 100); // Throttle update frequency to once per second
+        }
+    });
+
+    socket.on('removeCursor', (cursorId) => {
+        let cursor = document.getElementById(cursorId);
+        if(cursor){ cursor.remove(); }
+        else { console.log('Cannot remove: '+cursorId) }
+    })
 }
+
+function getCursorPosition(event) {
+    const rect = canvas.getBoundingClientRect();
+    const scale = rect.width / canvas.offsetWidth;
+    const x = Math.floor((event.clientX - rect.left) / (10 * scale)) * 10;
+    const y = Math.floor((event.clientY - rect.top) / (10 * scale)) * 10;
+  
+    return { x, y };
+}
+  
 
 function setColorPalette(){
     if( isValidHexArray(gameCFG.colors) ){ return; }
@@ -259,3 +290,15 @@ function setColorPalette(){
         document.getElementById("colorPicker").appendChild(button);
     });
 }
+
+function generateUserColor(userId) {
+    let hash = 0;
+  
+    for (let i = 0; i < userId.length; i++) {
+      hash = userId.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash;
+    }
+  
+    const color = Math.floor(Math.abs((Math.sin(hash) * 16777215) % 1) * 16777215).toString(16);
+    return `#${"000000".substring(0, 6 - color.length)}${color}`;
+  }

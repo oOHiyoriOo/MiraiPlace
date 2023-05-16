@@ -30,6 +30,8 @@ const redeemKeyHandler    = require('./lib/handlers/events/redeemKeyHandler');
 const ipLastPaintTime = {};
 let vip = [];
 
+let activeCursors = {};
+
 // #                                                                                               #
 // #################################################################################################
 // #                                                                                               #
@@ -119,13 +121,33 @@ io.use((socket, next) => {
   connectionHandler(socket, db, place_cfg, vip);
 
   socket.on('drawPixel', (data) => {
-    drawPixelHandler(socket, db, place_cfg, vip, ipLastPaintTime, data, __dirname);
+    drawPixelHandler(socket, db, place_cfg, vip, ipLastPaintTime, data, __dirname, io);
   });
 
   socket.on('redeemKey', (key) => {
     redeemKeyHandler(socket, place_cfg, vip, key, __dirname);
   });
+
+
+  // When a user connects and sets a cursor position
+  socket.on('setCursorPosition', (data) => {
+    activeCursors[socket.decoded.user.id] = data;
+  });
+
+  // When a user disconnects
+  socket.on('disconnect', () => {
+    // Remove the user's cursor from the active cursors map    
+    delete activeCursors[socket.decoded.user.id]
+
+    io.emit('removeCursor', socket.decoded.user.id)
+  });
 });
+
+// update all cursors in a set timeframe to prevent spamming data.
+setInterval(() =>{
+  io.emit('cursorsUpdate', activeCursors); // Broadcast updated cursor positions to all clients
+}, 100)
+
 
 server.listen(server_cfg.port, server_cfg.host, () => {
   console.log(`Server running on: http://${server_cfg.host}:${server_cfg.port} \nlocal: http://127.0.0.1:${server_cfg.port}\nhello pterodactyl!`);
